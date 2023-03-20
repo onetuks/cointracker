@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -27,34 +27,115 @@ const Loader = styled.span`
 
 interface RouteState {
   state: {
-    name: string,
-    symbol: string,
+    name: string;
+    symbol: string;
   };
 }
 
-function Coin() {
-//   const { state: {
-//     name, symbol
-//   } } = useLocation() as RouteState;
-    const { state } = useLocation() as RouteState;
-  const { coinId } = useParams();
-  const [loading, setLoading] = useState(true);
+// Array interface 선언 방법
+interface IData {
+    id: string;
+    name: string;
+    position: string;
+}
 
-  console.log(state?.name, state?.symbol, coinId);
+interface IInfoData {
+    id: string;
+    name: string;
+    symbol: string;
+    rank: number;
+    is_new: boolean;
+    is_active: boolean;
+    type: string;
+    logo: string;
+    tags: IData[];
+    team: IData[];
+    description: string;
+    message: string;
+    open_source: boolean;
+    started_at: string;
+    development_status: string;
+    hardware_wallet: boolean;
+    proof_type: string;
+    org_structure: string;
+    hash_algorithm: string;
+    links: object;
+    links_extended: object;
+    whitepaper: object;
+    last_data_at: string;
+    first_data_at: string;
+}
+
+// object interface 선언방법
+interface IPriceData { 
+    id: string;
+    name: string;
+    symbol: string;
+    rank: number;
+    circulating_supply: number;
+    total_supply: number;
+    max_supply: number;
+    beta_value: number;
+    first_data_at: string;
+    last_updated: string;
+    quotes: {
+        USD: {
+            ath_date : string;
+            ath_price : number;
+            market_cap : number;
+            market_cap_change_24h : number;
+            percent_change_1h : number;
+            percent_change_1y : number;
+            percent_change_6h : number;
+            percent_change_7d : number;
+            percent_change_12h : number;
+            percent_change_15m : number;
+            percent_change_24h : number;
+            percent_change_30d : number;
+            percent_change_30m : number;
+            percent_from_price_ath : number;
+            price : number;
+            volume_24h : number;
+            volume_24h_change_24h : number;
+        }
+    };
+}
+
+function Coin() {
+  const { coinId } = useParams();
+  const { state } = useLocation() as RouteState;
+  const [loading, setLoading] = useState(true);
+  // state은 Generic으로 선언해야함. 
+  const [info, setInfo] = useState<IInfoData>();
+  const [priceInfo, setPriceInfo] = useState<IPriceData>();
+
+  // console.log(state?.name, state?.symbol, coinId);
+
+  useEffect(() => {
+    (async () => {
+      const infoData = await (
+        await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
+      ).json();
+      
+      const priceData = await (
+        await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
+      ).json();
+      
+      console.log(infoData);
+      console.log(priceData);
+      
+      setInfo(infoData);
+      setPriceInfo(priceData);
+      setLoading(false);
+    })();
+  }, []);
 
   return (
     <Container>
       <Header>
-        {/** 
-         * state?.name
-         * 
-         * - "/" 에서 Link를 통해 Coin 컴포넌트로 이동한 경우 state가 전달되어서 제대로 state.name이 렌더링
-         * - "/id" 로 직접 방문하여 "/" 에서 이동한게 아닌 경우 state가 없기 때문에 "Loading..." 텍스트가 렌더링
-         * - ?(optional)이 없는 경우 state가 undefined 이므로 크래시가 발생.
-         */}
-        <Title>{ state?.name || "Loading..." }</Title>
+        <Title>{state?.name || "Loading..."}</Title>
       </Header>
-      {loading ? <Loader>Loading...</Loader> : null}
+      {loading ? <Loader>Loading...</Loader> : priceInfo?.quotes.USD.ath_date}
     </Container>
   );
 }
