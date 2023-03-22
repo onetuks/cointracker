@@ -4,6 +4,7 @@ import {
   Outlet,
   useLocation,
   useMatch,
+  useNavigate,
   useParams,
 } from "react-router-dom";
 import styled from "styled-components";
@@ -78,6 +79,18 @@ const Tab = styled.span<{ isActive: boolean }>`
     color: ${(props) =>
       props.isActive ? props.theme.accentColor : props.theme.textColor};
   }
+`;
+
+const Back = styled.button`
+  display: block;
+  background-color: ${(props) => props.theme.accentColor};
+  color: ${(p) => p.theme.textColor};
+  padding: 8px;
+  margin: auto;
+  margin-bottom: 20px;
+  border-radius: 15px;
+  font-size: 10px;
+  border: none;
 `;
 
 interface RouteState {
@@ -160,13 +173,18 @@ function Coin() {
   const { coinId } = useParams();
   const { state } = useLocation() as RouteState;
 
+  const navigate = useNavigate();
+  function onBackClick() {
+    navigate("/");
+  }
+
   // useMatch() 사용법
   const charMatch = useMatch("/:coinId/chart");
   const priceMatch = useMatch("/:coinId/price");
 
   const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
     ["info", coinId],
-    () => fetchInfo(`${coinId}`),
+    () => fetchInfo(`${coinId}`)
   );
   const { isLoading: tickerLoading, data: tickerData } = useQuery<IPriceData>(
     ["ticker", coinId],
@@ -217,6 +235,7 @@ function Coin() {
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
       </Header>
+      <Back onClick={onBackClick}>BACK</Back>
       {loading ? (
         <Loader>Loading...</Loader>
       ) : (
@@ -252,7 +271,9 @@ function Coin() {
               <Link to={`/${coinId}/chart`}>Chart</Link>
             </Tab>
             <Tab isActive={priceMatch !== null}>
-              <Link to={`/${coinId}/price`}>Price</Link>
+              <Link to={`/${coinId}/price`} state={{ priceData: tickerData?.quotes.USD }}>
+                Price
+              </Link>
             </Tab>
           </Tabs>
 

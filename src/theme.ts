@@ -4,5 +4,5 @@ export const theme: DefaultTheme = {
     bgColor: "#2c3e50",
     textColor: "#ecf0f1",
     accentColor: "#9b59b6",
-    btnColor: "tomato",
+    btnColor: "#0fbcf9",
 };
