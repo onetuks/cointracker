@@ -1,7 +1,14 @@
 import { useQuery } from "react-query";
-import { Link, Outlet, useLocation, useMatch, useParams } from "react-router-dom";
+import {
+  Link,
+  Outlet,
+  useLocation,
+  useMatch,
+  useParams,
+} from "react-router-dom";
 import styled from "styled-components";
 import { fetchInfo, fetchTicker } from "../api";
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0px 20px;
@@ -35,41 +42,42 @@ const Overview = styled.div`
 `;
 
 const OverviewItem = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 33%;
-    span: first-child { 
-        font-size: 10px;
-        font-weight: 400;
-        text-transform: uppercase;
-        margin-bottom: 5px;
-    }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 33%;
+  span: first-child {
+    font-size: 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+  }
 `;
 
 const Description = styled.p`
-    margin: 20px 0px;
+  margin: 20px 0px;
 `;
 
 const Tabs = styled.div`
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    margin: 25px 0px;
-    gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 25px 0px;
+  gap: 10px;
 `;
 
 const Tab = styled.span<{ isActive: boolean }>`
-    text-align: center;
-    text-transform: uppercase;
-    font-size: 12px;
-    font-weight: 400;
-    background-color: rgba(0, 0, 0, 0.5);
-    border-radius: 10px;
-    a {
-        padding: 7px 0px;
-        display: block;
-        color: ${(props) => props.isActive ? props.theme.accentColor : props.theme.textColor}
-    }
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 400;
+  background-color: rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
+  a {
+    padding: 7px 0px;
+    display: block;
+    color: ${(props) =>
+      props.isActive ? props.theme.accentColor : props.theme.textColor};
+  }
 `;
 
 interface RouteState {
@@ -151,13 +159,22 @@ interface IPriceData {
 function Coin() {
   const { coinId } = useParams();
   const { state } = useLocation() as RouteState;
-  
+
   // useMatch() 사용법
   const charMatch = useMatch("/:coinId/chart");
-  const priceMatch = useMatch("/:coinId/price")
-  
-  const {isLoading: infoLoading, data: infoData} = useQuery<IInfoData>(["info", coinId], () => fetchInfo(`${coinId}`));
-  const {isLoading: tickerLoading, data: tickerData} = useQuery<IPriceData>(["ticker", coinId], () => fetchTicker(`${coinId}`));
+  const priceMatch = useMatch("/:coinId/price");
+
+  const { isLoading: infoLoading, data: infoData } = useQuery<IInfoData>(
+    ["info", coinId],
+    () => fetchInfo(`${coinId}`),
+  );
+  const { isLoading: tickerLoading, data: tickerData } = useQuery<IPriceData>(
+    ["ticker", coinId],
+    () => fetchTicker(`${coinId}`),
+    {
+      refetchInterval: 10000,
+    }
+  );
 
   const loading: boolean = infoLoading || tickerLoading;
   // react-query 사용으로 폐기
@@ -189,9 +206,16 @@ function Coin() {
 
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </title>
+      </Helmet>
       <Header>
         {/* 이제 url을 복사해서 직접 coinId로 들어가도 보임 */}
-        <Title>{ state?.name ? state.name : loading ? "Loading..." : infoData?.name }</Title>
+        <Title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </Title>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
@@ -204,11 +228,11 @@ function Coin() {
             </OverviewItem>
             <OverviewItem>
               <span>Symbol:</span>
-              <span>${infoData?.symbol}</span>
+              <span>{infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>{tickerData?.quotes.USD.price.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
@@ -223,16 +247,16 @@ function Coin() {
             </OverviewItem>
           </Overview>
 
-            <Tabs>
-                <Tab isActive={ charMatch !== null }>
-                    <Link to={`/${coinId}/chart`}>Chart</Link>
-                </Tab>
-                <Tab isActive={ priceMatch !== null }>
-                    <Link to={`/${coinId}/price`}>Price</Link>
-                </Tab>
-            </Tabs>
+          <Tabs>
+            <Tab isActive={charMatch !== null}>
+              <Link to={`/${coinId}/chart`}>Chart</Link>
+            </Tab>
+            <Tab isActive={priceMatch !== null}>
+              <Link to={`/${coinId}/price`}>Price</Link>
+            </Tab>
+          </Tabs>
 
-          <Outlet context={{coinId: coinId}} />
+          <Outlet context={{ coinId: coinId }} />
         </>
       )}
     </Container>
