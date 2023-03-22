@@ -20,9 +20,9 @@ export function fetchTicker(coinId: string) {
 }
 
 export function fetchCoinHistory(coinId: string) {
-    const endDate = Date.now() / 1000;
+    const endDate = Math.floor(Date.now() / 1000);
     const startDate = endDate - 60*60*24*7;
-    return fetch(`${CHART_URL}?coinId=${coinId}&start=${startDate}&end=${endDate}`).then((response) =>
+    return fetch(`${CHART_URL}?coinId=${coinId}`).then((response) =>
         response.json()
     );
 }

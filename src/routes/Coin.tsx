@@ -199,7 +199,7 @@ function Coin() {
         <>
           <Overview>
             <OverviewItem>
-              <span>Rank:</span>s
+              <span>Rank:</span>
               <span>{infoData?.rank}</span>
             </OverviewItem>
             <OverviewItem>
