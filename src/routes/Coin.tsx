@@ -232,7 +232,7 @@ function Coin() {
                 </Tab>
             </Tabs>
 
-          <Outlet />
+          <Outlet context={{coinId: coinId}} />
         </>
       )}
     </Container>
