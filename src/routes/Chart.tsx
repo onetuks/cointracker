@@ -49,15 +49,27 @@ function Chart() {
               background: "transparent",
             },
             grid: { show: false },
-            stroke: { curve: "smooth", width: 4},
+            stroke: { curve: "smooth", width: 4 },
             xaxis: {
-              axisTicks: {show: false,},
-              axisBorder: {show: false,},
+              axisTicks: { show: false },
+              axisBorder: { show: false },
               labels: { show: false },
+              categories: data?.map((hist) => hist.time_close*1000),
+              type: "datetime",
             },
             yaxis: {
               show: false,
             },
+            fill: {
+              type: "gradient",
+              gradient: { gradientToColors: ["#0be881"], stops: [0, 100] },
+            },
+            colors: ["#0fbcf9"],
+            tooltip: {
+                y: {
+                    formatter: (value) => value.toFixed(2)
+                }
+            }
           }}
         />
       )}
