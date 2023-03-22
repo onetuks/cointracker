@@ -46,6 +46,7 @@ const Loader = styled.span`
   display: block;
 `;
 
+
 const Img = styled.img`
   width: 35px;
   height: 35px;
