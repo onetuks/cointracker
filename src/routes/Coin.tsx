@@ -5,7 +5,6 @@ import {
   useLocation,
   useMatch,
   useNavigate,
-  useOutletContext,
   useParams,
 } from "react-router-dom";
 import styled from "styled-components";
@@ -243,7 +242,7 @@ function Coin() {
 
           <Tabs>
             <Tab isActive={charMatch !== null}>
-              <Link to={`/${coinId}/chart`}>Chart</Link>
+              <Link to={`/${coinId}/chart`} state={{ coinId : coinId }}>Chart</Link>
             </Tab>
             <Tab isActive={priceMatch !== null}>
               <Link to={`/${coinId}/price`} state={{ priceData: tickerData?.quotes.USD }}>

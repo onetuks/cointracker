@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
-import { Link, useOutletContext } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 

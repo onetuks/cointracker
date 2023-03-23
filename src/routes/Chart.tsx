@@ -1,6 +1,6 @@
 import ReactApexChart from "react-apexcharts";
 import { useQuery } from "react-query";
-import { useLocation, useOutletContext } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { fetchCoinHistory } from "../api";
 import { isDarkAtom } from "../atom";

@@ -1,5 +1,5 @@
 import ReactApexChart from "react-apexcharts";
-import { useLocation, useOutletContext } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import styled from "styled-components";
 import { isDarkAtom } from "../atom";
@@ -38,6 +38,8 @@ function Price() {
   const isDark = useRecoilValue(isDarkAtom);
   const { priceData } = useLocation().state as IState;
 
+  console.log(priceData);
+
   return (
     <Container>
       <Calculator price={priceData?.price} />
@@ -48,7 +50,10 @@ function Price() {
           {
             name: "rate_of_change",
             data: [
-              priceData.percent_change_12h
+              priceData?.percent_change_30m,
+              priceData?.percent_change_1h,
+              priceData?.percent_change_12h,
+              priceData?.percent_change_24h,
             ]
           },
         ]}
@@ -64,8 +69,8 @@ function Price() {
             text: "Rate of Change",
           },
           yaxis: {
-            min: -40,
-            max: 40,
+            min: -3,
+            max: 3,
           }
         }}
       />
