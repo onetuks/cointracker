@@ -5,6 +5,7 @@ import {
   useLocation,
   useMatch,
   useNavigate,
+  useOutletContext,
   useParams,
 } from "react-router-dom";
 import styled from "styled-components";
@@ -169,7 +170,12 @@ interface IPriceData {
   };
 }
 
+interface IContext {
+  isDark: boolean,
+}
+
 function Coin() {
+  const { isDark } = useOutletContext<IContext>();
   const { coinId } = useParams();
   const { state } = useLocation() as RouteState;
 
@@ -277,7 +283,7 @@ function Coin() {
             </Tab>
           </Tabs>
 
-          <Outlet context={{ coinId: coinId }} />
+          <Outlet context={{ coinId: coinId, isDark: isDark }} />
         </>
       )}
     </Container>

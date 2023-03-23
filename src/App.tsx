@@ -81,7 +81,7 @@ function App() {
       <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
         <button onClick={toggleDark}>Toggle Mode</button>
         <GlobalStyle />
-        <Outlet />
+        <Outlet context={{isDark: isDark}}/>
         <ReactQueryDevtools initialIsOpen={true} />
       </ThemeProvider>
     </>

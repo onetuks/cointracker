@@ -1,5 +1,5 @@
 import ReactApexChart from "react-apexcharts";
-import { useLocation } from "react-router-dom";
+import { useLocation, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 import Calculator from "./Calculator";
 
@@ -31,36 +31,30 @@ interface IState {
   };
 }
 
-function Price() {
-  const { priceData } = useLocation().state as IState;
+interface IContext { 
+  coinId : string;
+  isDark: boolean;
+}
 
-  console.log(priceData);
+function Price() {
+  const { coinId, isDark } = useOutletContext<IContext>();
+  const { priceData } = useLocation().state as IState;
 
   return (
     <Container>
       <Calculator price={priceData?.price} />
       <br/>
       <ReactApexChart
-        type="candlestick"
+        type="bar"
         series={[
           {
-            name: "histogram",
-            data: [
-              {x: "15m", y:priceData?.percent_change_15m},
-              {x: "30m", y:priceData?.percent_change_30m},
-              {x: "1h", y:priceData?.percent_change_1h},
-              {x: "6h", y:priceData?.percent_change_6h},
-              {x: "12h", y:priceData?.percent_change_12h},
-              {x: "24h", y:priceData?.percent_change_24h},
-              {x: "7d", y:priceData?.percent_change_7d},
-              {x: "30d", y:priceData?.percent_change_30d},
-              {x: "1y", y:priceData?.percent_change_1y},
-            ],
+            name: "rate_of_change",
+            data: 
           },
         ]}
         options={{
           theme: {
-            mode: "dark",
+            mode: isDark ? "dark" : "light",
           },
           chart: {
             height: 300,

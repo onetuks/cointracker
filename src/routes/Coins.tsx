@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet";
 import { useQuery } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 
@@ -65,12 +65,18 @@ interface ICoins {
   is_new: boolean;
 }
 
+interface IContext { 
+  isDark: boolean,
+}
+
 function Coins() {
   // react-query를 사용하면 데이터가 캐시에 남기 때문에 뒤로가기를 해도 코인 정보가 남아있음
   // 쿼리가 다시 발생하지 않는다는 의미.
   const { isLoading, data } = useQuery<ICoins[]>(["allCoins"], fetchCoins);
   // const [coins, setCoins] = useState<ICoins[]>([]);
   // const [loading, setLoading] = useState(true);
+
+  const { isDark } = useOutletContext<IContext>();
 
   // useEffect(() => {
   //   // ()();
