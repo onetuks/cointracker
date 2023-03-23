@@ -170,12 +170,7 @@ interface IPriceData {
   };
 }
 
-interface IContext {
-  isDark: boolean,
-}
-
 function Coin() {
-  const { isDark } = useOutletContext<IContext>();
   const { coinId } = useParams();
   const { state } = useLocation() as RouteState;
 
@@ -201,32 +196,6 @@ function Coin() {
   );
 
   const loading: boolean = infoLoading || tickerLoading;
-  // react-query 사용으로 폐기
-  // const [loading, setLoading] = useState(true);
-  // // state은 Generic으로 선언해야함.
-  // const [info, setInfo] = useState<IInfoData>();
-  // const [priceInfo, setPriceInfo] = useState<IPriceData>();
-
-  // // console.log(state?.name, state?.symbol, coinId);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const infoData = await (
-  //       await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)
-  //     ).json();
-
-  //     const priceData = await (
-  //       await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)
-  //     ).json();
-
-  //     console.log(infoData);
-  //     console.log(priceData);
-
-  //     setInfo(infoData);
-  //     setPriceInfo(priceData);
-  //     setLoading(false);
-  //   })();
-  // }, [coinId]);
 
   return (
     <Container>
@@ -283,7 +252,7 @@ function Coin() {
             </Tab>
           </Tabs>
 
-          <Outlet context={{ coinId: coinId, isDark: isDark }} />
+          <Outlet context={{ coinId: coinId }} />
         </>
       )}
     </Container>

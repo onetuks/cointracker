@@ -65,30 +65,8 @@ interface ICoins {
   is_new: boolean;
 }
 
-interface IContext { 
-  isDark: boolean,
-}
-
 function Coins() {
-  // react-query를 사용하면 데이터가 캐시에 남기 때문에 뒤로가기를 해도 코인 정보가 남아있음
-  // 쿼리가 다시 발생하지 않는다는 의미.
   const { isLoading, data } = useQuery<ICoins[]>(["allCoins"], fetchCoins);
-  // const [coins, setCoins] = useState<ICoins[]>([]);
-  // const [loading, setLoading] = useState(true);
-
-  const { isDark } = useOutletContext<IContext>();
-
-  // useEffect(() => {
-  //   // ()();
-  //   // () 안의 내용은 바로 실행됨.
-  //   (async () => {
-  //     const response = await fetch("https://api.coinpaprika.com/v1/coins");
-  //     const json = await response.json();
-  //     // console.log(json);
-  //     setCoins(json.slice(0, 100));
-  //     setLoading(false);
-  //   })();
-  // }, []);
 
   return (
     <Container>

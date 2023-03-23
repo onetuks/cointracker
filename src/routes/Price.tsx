@@ -1,6 +1,8 @@
 import ReactApexChart from "react-apexcharts";
 import { useLocation, useOutletContext } from "react-router-dom";
+import { useRecoilValue } from "recoil";
 import styled from "styled-components";
+import { isDarkAtom } from "../atom";
 import Calculator from "./Calculator";
 
 const Container = styled.div`
@@ -31,13 +33,9 @@ interface IState {
   };
 }
 
-interface IContext { 
-  coinId : string;
-  isDark: boolean;
-}
-
 function Price() {
-  const { coinId, isDark } = useOutletContext<IContext>();
+  // Recoil
+  const isDark = useRecoilValue(isDarkAtom);
   const { priceData } = useLocation().state as IState;
 
   return (
@@ -49,7 +47,9 @@ function Price() {
         series={[
           {
             name: "rate_of_change",
-            data: 
+            data: [
+              priceData.percent_change_12h
+            ]
           },
         ]}
         options={{
